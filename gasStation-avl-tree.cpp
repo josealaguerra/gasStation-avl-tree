@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <regex>
 
 
 
@@ -55,6 +56,30 @@ int alturaNodoIzquierda=0, alturaNodoDerecha=0 ;
 int esRaiz = 0 ;
 bool seEncontroLlave = false ;
 //int max(int paramNum1, int paramNum2);
+
+
+std::string ltrim(const std::string& s)
+{
+    static const std::regex lws{"^[[:space:]]*", std::regex_constants::extended};
+    return std::regex_replace(s, lws, "");
+}
+
+std::string rtrim(const std::string& s)
+{
+    static const std::regex tws{"[[:space:]]*$", std::regex_constants::extended};
+    return std::regex_replace(s, tws, "");
+}
+
+std::string trim(const std::string& s)
+{
+    return ltrim(rtrim(s));
+}
+
+
+
+
+
+
 
 
 
@@ -323,9 +348,17 @@ string obtieneCadenaDeCaracteresValido(string nameField) {
 	string responseValue;
 
 	//printf("\nIngrese %s de la gasolinera:\n", nameField);
-	cout << "\nIngrese " << nameField << " de la gasolinera:\n" << endl;
-	cin >> responseValue ;
 	//scanf("%s", &responseValue);
+	//cout << "\nIngrese " << nameField << " de la gasolinera:\n" << endl;
+	//cin >> responseValue ;
+	
+	cout << "\nIngrese "<<nameField << " de la gasolinera: " << endl ;
+	//getline(std::cin, responseValue);
+	cin >> responseValue ;
+
+	cout << "\nIngrese "<<nameField << " de la gasolinera: " << endl ;
+	cout << "\nIngrese "<<nameField << " de la gasolinera: " << endl ;
+	cout << "\nIngrese "<<nameField << " de la gasolinera: " << endl ;
 
 	return responseValue ;
 }
@@ -383,18 +416,23 @@ bool buscarNodo(nodeGasStation *root, bool last, int opcionDeBusqueda, int valor
 
 	if (root != nullptr) {
 		if (!seEncontroLlave) {
-
+			root->GasStationDepartamento = trim(root->GasStationDepartamento) ;
+			valorStr = trim(valorStr) ;
 			switch(opcionDeBusqueda) {
 				case 1:
 					//Departamento
-					if (root->GasStationDepartamento==valorStr) {
+					//if (root->GasStationDepartamento==valorStr) {
+					//if (strcmp(root->GasStationDepartamento, valorStr)==0) {
+					if (root->GasStationDepartamento.compare(valorStr)==0) {
 						seEncontroLlave = true;
 					}
 
 					break;
 				case 2:
 					//Municipio
-					if (root->GasStationMunicipio==valorStr) {
+					//if (root->GasStationMunicipio==valorStr) {
+					//if (strcmp(root->GasStationMunicipio, valorStr)==0) {
+					if (root->GasStationMunicipio.compare(valorStr)==0) {
 						seEncontroLlave = true;
 					}
 					break;
@@ -453,6 +491,7 @@ void Encabezado() {
 
 
 bool buscarNodoPideData(nodeGasStation *root, bool last, int opcionDeBusqueda) {
+	bool pideDatos=false;
 	system("cls");
 	int enteroIngresadoPorElUsuario = 0;
 	string strIngresadoPorElUsuario = "";
@@ -463,14 +502,17 @@ bool buscarNodoPideData(nodeGasStation *root, bool last, int opcionDeBusqueda) {
 		case 1:
 			//Departamento
 			strIngresadoPorElUsuario	= obtieneCadenaDeCaracteresValido("departamento (ubicacion)");
+			//strIngresadoPorElUsuario	= "GT";
 			break;
 		case 2:
 			//Municipio
 			strIngresadoPorElUsuario	= obtieneCadenaDeCaracteresValido("municipio (ubicacion)");
+			//strIngresadoPorElUsuario	= "GT";
 			break;
 		case 3:
 			//Zona
 			enteroIngresadoPorElUsuario	= obtieneEnteroValido("zona (ubicacion)");
+			//enteroIngresadoPorElUsuario	= 6;
 			break;
 
 		default:
@@ -489,6 +531,8 @@ bool buscarNodoPideData(nodeGasStation *root, bool last, int opcionDeBusqueda) {
 	}
 
 	getch();
+	pideDatos = true;
+	return pideDatos ;
 }
 
 
