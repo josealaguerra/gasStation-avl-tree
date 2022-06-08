@@ -15,7 +15,9 @@ combustible en dichas gasoilneas.
 
 
 Jose Alfredo Guerra Gomez
+5990-19-887
 
+Examen Final Programación 3
 
 
 */
@@ -54,22 +56,27 @@ class nodeGasStation {
 int alturaNodoIzquierda=0, alturaNodoDerecha=0 ;
 // Variable temporal para definir la raiz
 int esRaiz = 0 ;
+int numRegistrosEncontrados=0;
 bool seEncontroLlave = false ;
-//int max(int paramNum1, int paramNum2);
 
 
+//Quita espacios en blanco del lado izquierdo
 std::string ltrim(const std::string& s)
 {
     static const std::regex lws{"^[[:space:]]*", std::regex_constants::extended};
     return std::regex_replace(s, lws, "");
 }
 
+
+//Quita espacios en blanco del lado derecho
 std::string rtrim(const std::string& s)
 {
     static const std::regex tws{"[[:space:]]*$", std::regex_constants::extended};
     return std::regex_replace(s, tws, "");
 }
 
+
+//Quita espacios de ambos lados del string
 std::string trim(const std::string& s)
 {
     return ltrim(rtrim(s));
@@ -277,8 +284,6 @@ nodeGasStation *eliminaNodo(nodeGasStation *root, int GasStationID) {
 			free(temp);
 		} else {
 			nodeGasStation *temp = nodoMasPequenio(root->nodoDerecha);
-			//ASIGNA OTROS CAMPOS
-			//root->GasStationID = temp->GasStationID;
 			root = setNodeData(temp, root) ;
 			root->nodoDerecha = eliminaNodo(root->nodoDerecha, GasStationID);
 		}
@@ -312,7 +317,7 @@ nodeGasStation *eliminaNodo(nodeGasStation *root, int GasStationID) {
 }
 
 
-
+//Pone caracteres a la izquierda
 string lefPadTo(std::string &str, const size_t num, const char paddingChar = ' ') {
 	if(num > str.size())
 		str.insert(0, num - str.size(), paddingChar);
@@ -320,6 +325,8 @@ string lefPadTo(std::string &str, const size_t num, const char paddingChar = ' '
 	return str;
 }
 
+
+//Pone caracteres a la derecha
 string padTo(std::string &str, const size_t num, const char paddingChar = ' ') {
 	if(num > str.size())
 		str.append(num - str.length() - 1, paddingChar);
@@ -329,42 +336,29 @@ string padTo(std::string &str, const size_t num, const char paddingChar = ' ') {
 }
 
 
-
-
+//Solicita un numero entero de pantalla
 int obtieneEnteroValido(string nameField) {
 	int responseValue=0;
 
-	//printf("\nIngrese %s de la gasolinera:\n", nameField);
 	cout << "\nIngrese " << nameField << " de la gasolinera:\n" << endl;
-
 	scanf("%d", &responseValue);
 
 	return responseValue ;
 }
 
 
-
+//Solicita una cadena de caracteres de pantalla
 string obtieneCadenaDeCaracteresValido(string nameField) {
 	string responseValue;
 
-	//printf("\nIngrese %s de la gasolinera:\n", nameField);
-	//scanf("%s", &responseValue);
-	//cout << "\nIngrese " << nameField << " de la gasolinera:\n" << endl;
-	//cin >> responseValue ;
-	
 	cout << "\nIngrese "<<nameField << " de la gasolinera: " << endl ;
-	//getline(std::cin, responseValue);
 	cin >> responseValue ;
-
-	cout << "\nIngrese "<<nameField << " de la gasolinera: " << endl ;
-	cout << "\nIngrese "<<nameField << " de la gasolinera: " << endl ;
-	cout << "\nIngrese "<<nameField << " de la gasolinera: " << endl ;
 
 	return responseValue ;
 }
 
 
-
+//Solicita un numero decimal de pantalla
 double obtieneNumeroDobleValido(string nameField) {
 	double responseDoubleValue=0.00;
 
@@ -374,16 +368,6 @@ double obtieneNumeroDobleValido(string nameField) {
 
 	return responseDoubleValue ;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 // Descripción: reporte de informacion enviado a consola
@@ -421,8 +405,6 @@ bool buscarNodo(nodeGasStation *root, bool last, int opcionDeBusqueda, int valor
 			switch(opcionDeBusqueda) {
 				case 1:
 					//Departamento
-					//if (root->GasStationDepartamento==valorStr) {
-					//if (strcmp(root->GasStationDepartamento, valorStr)==0) {
 					if (root->GasStationDepartamento.compare(valorStr)==0) {
 						seEncontroLlave = true;
 					}
@@ -430,8 +412,6 @@ bool buscarNodo(nodeGasStation *root, bool last, int opcionDeBusqueda, int valor
 					break;
 				case 2:
 					//Municipio
-					//if (root->GasStationMunicipio==valorStr) {
-					//if (strcmp(root->GasStationMunicipio, valorStr)==0) {
 					if (root->GasStationMunicipio.compare(valorStr)==0) {
 						seEncontroLlave = true;
 					}
@@ -439,6 +419,7 @@ bool buscarNodo(nodeGasStation *root, bool last, int opcionDeBusqueda, int valor
 				case 3:
 					//Zona
 					if (root->GasStationZona==valorEntero) {
+						
 						seEncontroLlave = true;
 					}
 					break;
@@ -449,6 +430,7 @@ bool buscarNodo(nodeGasStation *root, bool last, int opcionDeBusqueda, int valor
 			}
 
 			if(seEncontroLlave) {
+				numRegistrosEncontrados++;				
 				escribeDetalle(root);
 				seEncontroLlave = false;
 			}
@@ -461,11 +443,10 @@ bool buscarNodo(nodeGasStation *root, bool last, int opcionDeBusqueda, int valor
 }
 
 
-
-
-
+//Escribe el encabezado del reporte
 void Encabezado() {
 	system("cls");
+	numRegistrosEncontrados=0;
 
 	printf("\n%s |%s |%s |%s |%s |%s |%s |%s |%s |%s |%s |%s |%s",
 	       "ID",
@@ -482,12 +463,7 @@ void Encabezado() {
 	       "Regular",
 	       "Super" ) ;
 	printf("\n------------------------------------------------------------------------------------------------------\n") ;
-
-
 }
-
-
-
 
 
 bool buscarNodoPideData(nodeGasStation *root, bool last, int opcionDeBusqueda) {
@@ -502,17 +478,14 @@ bool buscarNodoPideData(nodeGasStation *root, bool last, int opcionDeBusqueda) {
 		case 1:
 			//Departamento
 			strIngresadoPorElUsuario	= obtieneCadenaDeCaracteresValido("departamento (ubicacion)");
-			//strIngresadoPorElUsuario	= "GT";
 			break;
 		case 2:
 			//Municipio
 			strIngresadoPorElUsuario	= obtieneCadenaDeCaracteresValido("municipio (ubicacion)");
-			//strIngresadoPorElUsuario	= "GT";
 			break;
 		case 3:
 			//Zona
 			enteroIngresadoPorElUsuario	= obtieneEnteroValido("zona (ubicacion)");
-			//enteroIngresadoPorElUsuario	= 6;
 			break;
 
 		default:
@@ -524,18 +497,17 @@ bool buscarNodoPideData(nodeGasStation *root, bool last, int opcionDeBusqueda) {
 	seEncontroLlave = false ;
 	seEncontroLlave = buscarNodo(root, true, opcionDeBusqueda, enteroIngresadoPorElUsuario, strIngresadoPorElUsuario);
 
-	if(seEncontroLlave) {
-		printf("SI SE ENCONTRO !!!\n");
+	if(numRegistrosEncontrados==0) {
+		printf("\n\nERROR AL BUSCAR, NO SE ENCONTRO NINGUN REGISTRO !!!");
+
 	} else {
-		printf("ERROR AL BUSCAR, NO SE ENCONTRO !!!\n");
+		printf("\n\nSE ENCONTRARON %d REGISTROS !!!", numRegistrosEncontrados);
 	}
 
 	getch();
 	pideDatos = true;
 	return pideDatos ;
 }
-
-
 
 
 void busca(nodeGasStation *root) {
@@ -565,15 +537,12 @@ void busca(nodeGasStation *root) {
 
 			default:
 				printf("%s\n","4.Salir");
-				//getch();
 				opcionDeBusqueda=0;
 				break;
 		}
 	}
 
 }
-
-
 
 
 // Descripción: Imprime el arbol en consola
@@ -601,77 +570,35 @@ void imprimirEnConsola(nodeGasStation *root, string indent, bool last) {
 }
 
 
-
-
 void imprimeEnConsola(nodeGasStation *root) {
 	esRaiz = 0 ;
 	imprimirEnConsola(root, "", true);
 }
 
 
-
-
-
 // Descripción: reporte de informacion enviado a consola
 // Parametro entrada: raiz del arbol
 void reporteInfo(nodeGasStation *root, string indent, bool last) {
 	if (root != nullptr) {
-
 		escribeDetalle(root);
-		/*
-				printf("%d |%s |%s |%s |%d |   %.2f |   %.2f |%d |%d |%d |   %.2f |   %.2f |   %.2f\n",
-				       root->GasStationID,
-				       padTo(root->GasStationName, 15).c_str(),
-				       padTo(root->GasStationDepartamento, 5).c_str(),
-				       padTo(root->GasStationMunicipio, 10).c_str(),
-				       root->GasStationZona,
-				       root->GasStationLatitud,
-				       root->GasStationLongitud,
-				       root->GasStationAnio,
-				       root->GasStationMes,
-				       root->GasStationDia,
-				       root->GasStationDiesel,
-				       root->GasStationRegular,
-				       root->GasStationSuper ) ;
-		*/
 		reporteInfo(root->nodoIzquierda, indent, false);
 		reporteInfo(root->nodoDerecha, indent, true);
 	}
 }
 
 
-
-
 //Genera el reporte de informacion
 void ReporteDeInformacion(nodeGasStation *root) {
 	esRaiz = 0 ;
-	//Encabezado
 	Encabezado();
-	/*
-	system("cls");
-
-	printf("\n%s |%s |%s |%s |%s |%s |%s |%s |%s |%s |%s |%s |%s",
-	       "ID",
-	       "Nombre        ",
-	       "Dep.",
-	       "Municipio",
-	       "Zona",
-	       "Latitud",
-	       "Longitud",
-	       "Anio",
-	       "Mes",
-	       "Dia",
-	       "Diesel",
-	       "Regular",
-	       "Super" ) ;
-	printf("\n------------------------------------------------------------------------------------------------------\n") ;
-	*/
 	reporteInfo(root, "", true);
 	getch();
 }
 
 
 nodeGasStation *Demo(nodeGasStation *root) {
+	system("cls");	
+	printf("INGRESANDO DATOS PARA REALIZAR DEMO...\n");	
 
 	nodeGasStation *nuevaGasolinera = new nodeGasStation() ;
 
@@ -773,23 +700,12 @@ nodeGasStation *Demo(nodeGasStation *root) {
 	nuevaGasolinera->GasStationRegular 		= 98.30 ;
 	nuevaGasolinera->GasStationSuper 		= 99.30 ;
 	root = insertaNodo(root, nuevaGasolinera);
+	
+	printf("\n\n\n.....SE COMPLETO CORRECTAMENTE EL INGRESO DE DATOS PARA REALIZAR DEMO...\n");
+	getch()	;
 
 	return root ;
-	/*
-	esRaiz = 0 ;
-	imprimeEnConsola(root);
-	root = eliminaNodo(root, 13);
-	cout << "After deleting " << endl;
-	imprimeEnConsola(root);
-	*/
-
 }
-
-
-
-
-
-
 
 
 //Solicita información en pantalla y
@@ -818,28 +734,6 @@ nodeGasStation *insertar(nodeGasStation *paramNodo) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-//Se busca una llave dentro del arbol
-bool buscar() {
-	bool seBusca = false;
-
-
-
-	return seBusca ;
-}
-
-
 //Se elimina una llave dentro del arbol
 nodeGasStation *eliminar(nodeGasStation *paramNodo) {
 	system("cls");
@@ -852,9 +746,6 @@ nodeGasStation *eliminar(nodeGasStation *paramNodo) {
 
 	return eliminaNodo(paramNodo, llaveIngresadaPorElUsuario) ;
 }
-
-
-
 
 
 //Se imprime el arbol que se tiene en este momento
@@ -873,26 +764,6 @@ bool Recorrido(nodeGasStation *paramNodo) {
 
 
 
-//Se imprime el arbol que se tiene en este momento usando GraphViz
-bool RecorridoMejorado() {
-	bool seRecorrio = false;
-
-
-
-	return seRecorrio ;
-}
-
-
-
-
-
-
-
-
-
-
-
-
 int main() {
 
 	nodeGasStation *raiz = NULL;
@@ -900,10 +771,10 @@ int main() {
 	int opcion=0;
 	while(opcion != 5) {
 		system("cls");
-		printf("%s\n","1.Ingresar información");
-		printf("%s\n","2.Consultar información");
-		printf("%s\n","3.Reporte de información");
-		printf("%s\n","4.Llenar información predeterminada (demo)");
+		printf("%s\n","1.Ingresar informacion");
+		printf("%s\n","2.Consultar informacion");
+		printf("%s\n","3.Reporte de informacion");
+		printf("%s\n","4.Llenar informacion predeterminada (demo)");
 		printf("%s\n","5.Salir");
 		printf("%s\n","Seleccione una opcion");
 		scanf("%d", &opcion);
@@ -926,7 +797,6 @@ int main() {
 
 			default:
 				printf("%s\n","6.Salir");
-				//getch();
 				opcion=0;
 				break;
 		}
